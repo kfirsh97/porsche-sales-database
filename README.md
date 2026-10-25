@@ -98,6 +98,12 @@ WHERE aps.Average_Sale_Price > oa.Overall_Average_Price;
 ## ▶️ How to run
 
 1. Open SQL Server Management Studio (or Azure Data Studio).
+   - **On macOS:** SQL Server doesn't install natively, so run it in Docker and connect with Azure Data Studio:
+     ```bash
+     docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YourStrong!Passw0rd>" \
+       -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server:2022-latest
+     ```
+     Then connect to `localhost,1433` with user `sa`.
 2. Run, in this order:
    - `sql/01_schema.sql` – creates the `Porsche` database and all tables
    - `sql/02_seed_data.sql` – loads the sample data (large file, takes a minute)
@@ -119,6 +125,16 @@ porsche-sales-database/
 
 > All people, ID numbers, phone numbers and emails in the sample data are fictional.
 
-## 👥 Team
+## 🛠️ How I built it
 
-Kfir Shary, with Doron Oved and Shoham Guetta.
+I designed and built the entire project myself: the conceptual, logical and physical models, the schema and constraints, the sample data and all 12 analysis queries.
+
+A few real-world problems I had to solve along the way:
+
+- **Running SQL Server on a Mac.** Microsoft SQL Server has no native macOS install, so I ran it in a **Docker** container and worked against it through **Azure Data Studio**.
+- **Loading the data without an Excel import.** The sample data lived in Excel, and there was no way to import an Excel file in that setup. Working with an **AI assistant (Claude)**, I turned the spreadsheets into generated **`INSERT` scripts** – about **6,000 statements and ~65,000 rows** across all tables (`sql/02_seed_data.sql`) – and loaded the data that way.
+- **Checking the results.** I used AI to cross-check query outputs and catch edge cases, and validated the results against manual calculations.
+
+## 👤 Author
+
+**Kfir Shary** – [GitHub](https://github.com/kfirsh97)
