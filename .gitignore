@@ -5,3 +5,6 @@ __pycache__/
 agent/logs/
 # Data you load yourself (e.g. setup/csv_to_sqlite.py) stays on your computer
 agent/data/superstore.*
+
+# Dashboards you pin are saved on your computer
+agent/dashboards/
