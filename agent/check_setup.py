@@ -1,0 +1,79 @@
+"""Stage 1 check: can we reach the database, is the user really read-only, and is the API key set?
+
+Run:  python check_setup.py
+"""
+import os
+
+from db import connect
+
+
+def main():
+    conn = connect()
+    cur = conn.cursor()
+
+    # 1. Row count per table - proves the connection works and the data is loaded.
+    cur.execute("""
+        SELECT t.name AS table_name, SUM(p.rows) AS row_count
+        FROM sys.tables t
+        JOIN sys.partitions p ON p.object_id = t.object_id AND p.index_id IN (0, 1)
+        GROUP BY t.name
+        ORDER BY row_count DESC
+    """)
+    rows = cur.fetchall()
+    print(f"Connected. {len(rows)} tables:")
+    for r in rows:
+        print(f"  {r['table_name']:<28} {r['row_count']:>7,}")
+
+    # 2. The agent's user must NOT be able to write.
+    try:
+        cur.execute("CREATE TABLE _write_test (x INT)")
+        conn.commit()
+        print("\nWARNING: the user can write to the database! Use the read-only user.")
+        cur.execute("DROP TABLE _write_test")
+        conn.commit()
+    except Exception:
+        print("\nGood: the user is read-only (write was blocked).")
+
+    conn.close()
+
+    check_gemini()
+    check_claude()
+
+
+def check_gemini():
+    # Gemini key: present, not the placeholder, and accepted by Google.
+    # We never print a key - only its length and first 4 characters, to spot paste mistakes.
+    raw = os.environ.get("GEMINI_API_KEY", "")
+    key = raw.strip().strip("'\"").strip()
+    if not key or key == "your-key-here":
+        print("Gemini API key: not set")
+        return
+    print(f"Gemini API key: length {len(key)}, starts with '{key[:4]}'")
+    try:
+        from google import genai
+        client = genai.Client(api_key=key)      # keep a reference, or the client closes too early
+        next(iter(client.models.list()))
+        print("Gemini API key: valid (Google accepted it)")
+    except Exception as e:
+        print("Gemini API key: REJECTED by Google -", str(e)[:160])
+
+
+def check_claude():
+    raw = os.environ.get("ANTHROPIC_API_KEY", "")
+    key = raw.strip().strip("'\"").strip()
+    if not key:
+        print("Anthropic API key: not set")
+        return
+    print(f"Anthropic API key: length {len(key)}, starts with '{key[:7]}'")
+    try:
+        import anthropic
+        client = anthropic.Anthropic(api_key=key)
+        client.messages.create(model=os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5"), max_tokens=5,
+                               messages=[{"role": "user", "content": "ping"}])
+        print("Anthropic API key: valid, and the account has credit")
+    except Exception as e:
+        print("Anthropic API key: problem -", str(e)[:200])
+    print("Active provider:", os.environ.get("PROVIDER", "gemini"))
+
+if __name__ == "__main__":
+    main()

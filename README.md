@@ -114,6 +114,7 @@ WHERE aps.Average_Sale_Price > oa.Overall_Average_Price;
 ```
 porsche-sales-database/
 ├── README.md
+├── agent/                     # AI SQL agent (see agent/README.md)
 ├── sql/
 │   ├── 01_schema.sql            # DDL: tables, keys, constraints
 │   ├── 02_seed_data.sql         # sample data
@@ -124,6 +125,12 @@ porsche-sales-database/
 ```
 
 > All people, ID numbers, phone numbers and emails in the sample data are fictional.
+
+## 🤖 SQL Agent
+
+The [`agent/`](agent/) folder adds an AI agent that answers business questions about this database in plain language
+(Hebrew or English): it reads the schema, writes and runs T-SQL with a read-only user, fixes its own errors,
+and is scored against an answer key built from the queries above — **12/12 correct**. See [agent/README.md](agent/README.md).
 
 ## 🛠️ How I built it
 
