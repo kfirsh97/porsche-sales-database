@@ -130,7 +130,11 @@ porsche-sales-database/
 
 The [`agent/`](agent/) folder adds an AI agent that answers business questions about this database in plain language
 (Hebrew or English): it reads the schema, writes and runs T-SQL with a read-only user, fixes its own errors,
-and is scored against an answer key built from the queries above — **12/12 correct**. See [agent/README.md](agent/README.md).
+and is scored against an answer key built from the queries above — **12/12 correct**. It runs as a **web chat**
+that remembers the conversation, so follow-up questions work ("and in 2023?", "only Turbo models").
+
+- How it works and how it was measured: [agent/README.md](agent/README.md)
+- Step-by-step setup, from an empty Mac to a running chat: [agent/SETUP.md](agent/SETUP.md)
 
 ## 🛠️ How I built it
 
