@@ -12,7 +12,7 @@ Designed and built in **SQL Server (T-SQL)** as part of the *Advanced Database A
 | | |
 |---|---|
 | **Tables** | 18 |
-| **Rows of seed data** | ~65,000 |
+| **Rows of seed data** | ~58,000 |
 | **Largest tables** | Customers (15K), Services (13.7K), Cars / Sales / Payments / Policies (~4.5K each) |
 | **Analysis queries** | 12 |
 | **Engine** | Microsoft SQL Server |
@@ -132,7 +132,7 @@ I designed and built the entire project myself: the conceptual, logical and phys
 A few real-world problems I had to solve along the way:
 
 - **Running SQL Server on a Mac.** Microsoft SQL Server has no native macOS install, so I ran it in a **Docker** container and worked against it through **Azure Data Studio**.
-- **Loading the data without an Excel import.** The sample data lived in Excel, and there was no way to import an Excel file in that setup. Working with an **AI assistant (Claude)**, I turned the spreadsheets into generated **`INSERT` scripts** – about **6,000 statements and ~65,000 rows** across all tables (`sql/02_seed_data.sql`) – and loaded the data that way.
+- **Loading the data without an Excel import.** The sample data lived in Excel, and there was no way to import an Excel file in that setup. Working with an **AI assistant (Claude)**, I turned the spreadsheets into generated **`INSERT` scripts** – about **6,000 statements and ~58,000 rows** across all tables (`sql/02_seed_data.sql`) – and loaded the data that way.
 - **Checking the results.** I used AI to cross-check query outputs and catch edge cases, and validated the results against manual calculations.
 
 ## 👤 Author
