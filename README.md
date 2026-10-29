@@ -126,9 +126,9 @@ porsche-sales-database/
 
 > All people, ID numbers, phone numbers and emails in the sample data are fictional.
 
-## 🤖 SQL Agent
+## 🤖 RowAsk – the SQL Agent
 
-The [`agent/`](agent/) folder adds an AI agent that answers business questions about this database in plain language
+The [`agent/`](agent/) folder adds **RowAsk**, an AI agent that answers business questions about this database in plain language
 (Hebrew or English): it reads the schema, writes and runs T-SQL with a read-only user, fixes its own errors,
 and is scored against an answer key built from the queries above — **12/12 correct**. It runs as a **web chat**
 that remembers the conversation, so follow-up questions work ("and in 2023?", "only Turbo models"). It is not tied to
