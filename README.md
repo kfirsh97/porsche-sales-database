@@ -130,7 +130,7 @@ porsche-sales-database/
 
 The [`agent/`](agent/) folder adds an AI agent that answers business questions about this database in plain language
 (Hebrew or English): it reads the schema, writes and runs T-SQL with a read-only user, fixes its own errors,
-and is scored against an answer key built from the queries above. See [agent/README.md](agent/README.md).
+and is scored against an answer key built from the queries above — **12/12 correct**. See [agent/README.md](agent/README.md).
 
 ## 🛠️ How I built it
 
