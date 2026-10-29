@@ -21,6 +21,10 @@ A hand-written agent loop (~100 lines, no agent framework), so every decision is
 2. Each turn the model either calls a tool or answers. SQL errors are sent back to it, so it corrects itself.
 3. The loop stops at an answer, or after **8 steps** — it can never loop forever.
 4. Every step is logged to `logs/` (question, each tool call, result, final SQL, time).
+5. **It's a conversation.** The last 6 question/answer pairs go back to the model with each new message, so
+   follow-ups work ("how many sales in 2022?" → "and in 2023?" → "only Turbo models"). Only the text of earlier
+   turns is resent, not their tool calls, which keeps requests small. Messages that need no data
+   ("thanks", "explain that query") get a direct reply without touching the database.
 
 **Two model providers**, same tools, prompt and safety: Gemini (`PROVIDER=gemini`) or Claude (`PROVIDER=claude`).
 
@@ -64,15 +68,19 @@ Results with full details are saved in `eval_results/`.
 
 ## Run it
 
+**Full step-by-step setup, from an empty Mac to a running chat: [SETUP.md](SETUP.md)**
+(SQL Server in Docker, loading the data, the read-only user, keys, and a troubleshooting table).
+
+Short version, once the database is running and loaded:
+
 ```bash
 cd agent
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env           # add your API key and the DB password
-# create the read-only user: run setup/01_create_reader.sql as sa
+cp .env.example .env           # add your API key and the read-only user's password
 python check_setup.py          # DB connection, read-only check, API key check
-python agent.py "Who were the top 3 sellers by revenue?"
-python -m pytest tests         # 37 tests, no database or API key needed
+python -m streamlit run app.py # web chat on http://localhost:8501
+python -m pytest tests         # 43 tests, no database or API key needed
 ```
 
 ## Files
@@ -82,16 +90,18 @@ python -m pytest tests         # 37 tests, no database or API key needed
 | `agent.py` | The agent loop, prompt, providers, retries and logging |
 | `tools.py` | `get_schema`, `run_query`, the SQL safety validator and the business notes |
 | `eval.py` · `eval_questions.py` · `compare.py` | Answer key, evaluation runner and result comparison |
-| `db.py` · `check_setup.py` · `setup/` | Database connection, setup check, read-only user |
+| `app.py` | The web chat (Streamlit) |
+| `db.py` · `check_setup.py` · `setup/` · `SETUP.md` | Database connection, setup check, read-only user, setup guide |
 | `tests/` | Safety, agent loop (with a fake model), comparison and evaluation tests |
 
 ## Web interface
 
 ```bash
-streamlit run app.py           # opens http://localhost:8501
-DEMO=1 streamlit run app.py    # replays two recorded runs - no database or API key needed
+python -m streamlit run app.py           # opens http://localhost:8501
+DEMO=1 python -m streamlit run app.py    # replays two recorded runs - no database or API key needed
 ```
 
-Ask in Hebrew or English and watch each step as it happens: the schema read, every query with its row count,
+A chat: ask in Hebrew or English, then keep going with follow-up questions – the agent remembers the
+conversation, and **New conversation** in the sidebar starts over. Watch each step as it happens: the schema read, every query with its row count,
 then the answer, the result table and the SQL behind it. The sidebar switches between Claude and Gemini and
 turns the business notes on or off.
