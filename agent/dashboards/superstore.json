@@ -1,0 +1,36 @@
+[
+  {
+    "id": "5badee13",
+    "title": "segment share",
+    "sql": "SELECT Segment, ROUND(SUM(Sales), 0) AS Sales FROM superstore GROUP BY 1 ORDER BY 2 DESC",
+    "chart": {
+      "type": "pie",
+      "x": "Segment",
+      "y": "Sales"
+    },
+    "added": "2026-10-30T01:51:16"
+  },
+  {
+    "id": "de06a1b2",
+    "title": "sales by state",
+    "sql": "SELECT State_Province, ROUND(SUM(Sales), 0) AS Sales FROM superstore WHERE Country_Region = 'United States' GROUP BY 1 ORDER BY 2 DESC",
+    "chart": {
+      "type": "map",
+      "x": "State_Province",
+      "y": "Sales"
+    },
+    "added": "2026-10-30T01:51:20"
+  },
+  {
+    "id": "f0f7e0e5",
+    "title": "region x category",
+    "sql": "SELECT Region, Category, ROUND(SUM(Profit), 0) AS Profit FROM superstore GROUP BY 1, 2",
+    "chart": {
+      "type": "heatmap",
+      "x": "Region",
+      "y": "Profit",
+      "color": "Category"
+    },
+    "added": "2026-10-30T01:51:28"
+  }
+]

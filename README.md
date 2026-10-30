@@ -114,7 +114,6 @@ WHERE aps.Average_Sale_Price > oa.Overall_Average_Price;
 ```
 porsche-sales-database/
 ├── README.md
-├── agent/                     # AI SQL agent (see agent/README.md)
 ├── sql/
 │   ├── 01_schema.sql            # DDL: tables, keys, constraints
 │   ├── 02_seed_data.sql         # sample data
@@ -126,15 +125,12 @@ porsche-sales-database/
 
 > All people, ID numbers, phone numbers and emails in the sample data are fictional.
 
-## 🤖 SQL Agent
+## 🤖 Ask this database in plain language: RowAsk
 
-The [`agent/`](agent/) folder adds an AI agent that answers business questions about this database in plain language
-(Hebrew or English): it reads the schema, writes and runs T-SQL with a read-only user, fixes its own errors,
-and is scored against an answer key built from the queries above — **12/12 correct**. It runs as a **web chat**
-that remembers the conversation, so follow-up questions work ("and in 2023?", "only Turbo models").
-
-- How it works and how it was measured: [agent/README.md](agent/README.md)
-- Step-by-step setup, from an empty Mac to a running chat: [agent/SETUP.md](agent/SETUP.md)
+This database is the main benchmark of **[RowAsk](https://github.com/kfirsh97/rowask)**, an AI agent I built that
+answers business questions about a database in Hebrew or English: it reads the schema, writes and runs the SQL with a
+read-only user, checks and fixes its own work, and charts the result. Scored against an answer key built from the
+12 queries above, it gets **12/12**. RowAsk now works on any database and lives in its own repository.
 
 ## 🛠️ How I built it
 
